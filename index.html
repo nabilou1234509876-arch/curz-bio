@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>curz | Bio</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(15, 15, 15, 0.65);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent: #ffffff;
+            --btn-bg: rgba(255, 255, 255, 0.05);
+            --btn-hover: rgba(255, 255, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow: hidden; /* Prevent scrolling */
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background Video */
+        #bg-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            z-index: -2;
+            object-fit: cover;
+            filter: brightness(0.4) contrast(1.1); /* Vignette / Dark tint */
+        }
+
+        /* Overlay to make card pop */
+        .bg-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Entrance Screen */
+        #entrance-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000000;
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+
+        .click-text {
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+            color: var(--text-main);
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.8); }
+            100% { opacity: 0.5; }
+        }
+
+        /* Main Content Container */
+        #main-content {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            z-index: 10;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255,255,255,0.05);
+        }
+
+        /* Profile Info */
+        .avatar-container {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 18px;
+            height: 18px;
+            background-color: #23a559; /* Discord Online Green */
+            border: 3px solid #111;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(35, 165, 89, 0.6);
+        }
+
+        .display-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        .handle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .bio {
+            font-size: 0.95rem;
+            color: #cccccc;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-weight: 400;
+            padding: 0 10px;
+        }
+
+        /* Link Buttons */
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--btn-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--btn-hover);
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
+            transform: scale(1.02);
+        }
+
+        .btn:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Custom GIF */
+        .custom-gif {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-gif:hover {
+            opacity: 1;
+        }
+
+        /* Footer */
+        .view-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.2em;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .view-counter i {
+            margin-right: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 25px 20px;
+            }
+            .display-name {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Looping Background Video -->
+    <!-- Replace src with your own MP4 link -->
+    <video id="bg-video" loop muted playsinline>
+        <source src="./bg-video.mp4" type="video/mp4">
+    </video>
+    <div class="bg-overlay"></div>
+
+    <!-- Entrance Screen -->
+    <div id="entrance-screen">
+        <div class="click-text">[ click to enter... ]</div>
+    </div>
+
+    <!-- Main Profile Content -->
+    <main id="main-content">
+        <div class="glass-card">
+            
+            <!-- Avatar -->
+            <div class="avatar-container">
+                <img src="https://cdn.discordapp.com/avatars/1153392848490737684/dbad3d657cd5e0e22d5c2f914711bb4e.png?size=256" alt="Profile Picture" class="avatar">
+                <div class="status-dot"></div>
+            </div>
+
+            <!-- Header -->
+            <h1 class="display-name">curz</h1>
+            <h2 class="handle">@curzzeddd</h2>
+
+            <!-- Bio -->
+            <p class="bio">Proffissional coder ig 🦇</p>
+
+            <!-- Social Links -->
+            <div class="links">
+                <!-- Roblox -->
+                <a href="https://www.roblox.com/fr/users/5456444336/profile" target="_blank" class="btn">
+                    <i class="fa-solid fa-gamepad"></i>
+                    Roblox Profile
+                </a>
+                
+                <!-- Discord -->
+                <a href="https://discord.com/users/1153392848490737684" target="_blank" class="btn">
+                    <i class="fa-brands fa-discord"></i>
+                    Discord: @curzzeddd
+                </a>
+
+                <!-- YouTube (Optional/Example) -->
+                <a href="https://www.youtube.com/@YepImDestro" target="_blank" class="btn">
+                    <i class="fa-brands fa-youtube"></i>
+                    YouTube
+                </a>
+            </div>
+
+            <!-- Custom Aesthetic Image/GIF -->
+            <!-- Replace src with your preferred aesthetic GIF -->
+            <img src="https://i.pinimg.com/originals/80/e5/59/80e559bf11ba4d4d12c8ff61fb7d0577.gif" alt="Aesthetic GIF" class="custom-gif">
+            
+        </div>
+    </main>
+
+    <!-- Footer View Counter -->
+    <footer class="view-counter">
+        <i class="fa-solid fa-eye"></i> <span id="views">0</span> VIEWS
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const entranceScreen = document.getElementById('entrance-screen');
+            const mainContent = document.getElementById('main-content');
+            const bgVideo = document.getElementById('bg-video');
+            const viewCountElement = document.getElementById('views');
+
+            // Simple View Counter using LocalStorage (increments on new visit)
+            let views = localStorage.getItem('profileViews') || 1204;
+            views = parseInt(views) + 1;
+            localStorage.setItem('profileViews', views);
+            
+            // Format number (e.g., 1,205)
+            viewCountElement.textContent = views.toLocaleString();
+
+            // Entrance Click Event
+            entranceScreen.addEventListener('click', () => {
+                // Fade out entrance screen
+                entranceScreen.style.opacity = '0';
+                entranceScreen.style.visibility = 'hidden';
+
+                // Start video
+                bgVideo.play().catch(error => {
+                    console.log("Autoplay prevented:", error);
+                });
+
+                // Small timeout to allow video to start smoothly, then fade in main card
+                setTimeout(() => {
+                    mainContent.classList.add('visible');
+                }, 400);
+            });
+        });
+    </script>
+</body>
+</html>
