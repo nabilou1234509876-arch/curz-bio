@@ -32,7 +32,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            overflow: hidden; /* Prevent scrolling */
+            overflow: hidden;
             height: 100vh;
             width: 100vw;
             display: flex;
@@ -40,7 +40,6 @@
             align-items: center;
         }
 
-        /* Background Video */
         #bg-video {
             position: absolute;
             top: 50%;
@@ -52,10 +51,9 @@
             transform: translateX(-50%) translateY(-50%);
             z-index: -2;
             object-fit: cover;
-            filter: brightness(0.4) contrast(1.1); /* Vignette / Dark tint */
+            filter: brightness(0.4) contrast(1.1);
         }
 
-        /* Overlay to make card pop */
         .bg-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -64,7 +62,6 @@
             pointer-events: none;
         }
 
-        /* Entrance Screen */
         #entrance-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -93,7 +90,6 @@
             100% { opacity: 0.5; }
         }
 
-        /* Main Content Container */
         #main-content {
             opacity: 0;
             visibility: hidden;
@@ -111,7 +107,6 @@
             transform: scale(1);
         }
 
-        /* Glassmorphism Card */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(15px);
@@ -129,7 +124,6 @@
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255,255,255,0.05);
         }
 
-        /* Profile Info */
         .avatar-container {
             position: relative;
             width: 110px;
@@ -157,7 +151,7 @@
             right: 5px;
             width: 18px;
             height: 18px;
-            background-color: #23a559; /* Discord Online Green */
+            background-color: #23a559;
             border: 3px solid #111;
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(35, 165, 89, 0.6);
@@ -175,20 +169,10 @@
             font-size: 0.9rem;
             color: var(--text-muted);
             font-weight: 400;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             letter-spacing: 0.5px;
         }
 
-        .bio {
-            font-size: 0.95rem;
-            color: #cccccc;
-            line-height: 1.5;
-            margin-bottom: 25px;
-            font-weight: 400;
-            padding: 0 10px;
-        }
-
-        /* Link Buttons */
         .links {
             display: flex;
             flex-direction: column;
@@ -212,6 +196,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .btn i {
@@ -230,7 +215,23 @@
             transform: scale(1.1);
         }
 
-        /* Custom GIF */
+        .about-content {
+            display: none;
+            padding: 12px;
+            color: #cccccc;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .custom-gif {
             width: 100%;
             height: 120px;
@@ -245,7 +246,6 @@
             opacity: 1;
         }
 
-        /* Footer */
         .view-counter {
             position: fixed;
             bottom: 20px;
@@ -262,7 +262,6 @@
             margin-right: 5px;
         }
 
-        /* Responsive */
         @media (max-width: 480px) {
             .glass-card {
                 padding: 25px 20px;
@@ -275,37 +274,36 @@
 </head>
 <body>
 
-    <!-- Looping Background Video -->
-    <!-- Replace src with your own MP4 link -->
     <video id="bg-video" loop muted playsinline>
         <source src="./bg-video.mp4" type="video/mp4">
     </video>
     <div class="bg-overlay"></div>
 
-    <!-- Entrance Screen -->
     <div id="entrance-screen">
         <div class="click-text">[ click to enter... ]</div>
     </div>
 
-    <!-- Main Profile Content -->
     <main id="main-content">
         <div class="glass-card">
             
-            <!-- Avatar -->
             <div class="avatar-container">
                 <img src="https://cdn.discordapp.com/avatars/1153392848490737684/dbad3d657cd5e0e22d5c2f914711bb4e.png?size=256" alt="Profile Picture" class="avatar">
                 <div class="status-dot"></div>
             </div>
 
-            <!-- Header -->
             <h1 class="display-name">curz</h1>
             <h2 class="handle">@curzzeddd</h2>
 
-            <!-- Bio -->
-            <p class="bio">Proffissional coder ig 🦇</p>
-
-            <!-- Social Links -->
             <div class="links">
+                <!-- About Me Toggle -->
+                <button class="btn" id="about-me-btn">
+                    <i class="fa-solid fa-user"></i>
+                    About Me
+                </button>
+                <div id="about-me-content" class="about-content">
+                    Proffissional coder ig
+                </div>
+
                 <!-- Roblox -->
                 <a href="https://www.roblox.com/fr/users/5456444336/profile" target="_blank" class="btn">
                     <i class="fa-solid fa-gamepad"></i>
@@ -317,27 +315,17 @@
                     <i class="fa-brands fa-discord"></i>
                     Discord: @curzzeddd
                 </a>
-
-                <!-- YouTube (Optional/Example) -->
-                <a href="https://www.youtube.com/@YepImDestro" target="_blank" class="btn">
-                    <i class="fa-brands fa-youtube"></i>
-                    YouTube
-                </a>
             </div>
 
-            <!-- Custom Aesthetic Image/GIF -->
-            <!-- Replace src with your preferred aesthetic GIF -->
             <img src="https://i.pinimg.com/originals/80/e5/59/80e559bf11ba4d4d12c8ff61fb7d0577.gif" alt="Aesthetic GIF" class="custom-gif">
             
         </div>
     </main>
 
-    <!-- Footer View Counter -->
     <footer class="view-counter">
-        <i class="fa-solid fa-eye"></i> <span id="views">0</span> VIEWS
+        <i class="fa-solid fa-eye"></i> <span id="views">...</span> VIEWS
     </footer>
 
-    <!-- Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const entranceScreen = document.getElementById('entrance-screen');
@@ -345,26 +333,40 @@
             const bgVideo = document.getElementById('bg-video');
             const viewCountElement = document.getElementById('views');
 
-            // Simple View Counter using LocalStorage (increments on new visit)
-            let views = localStorage.getItem('profileViews') || 1204;
-            views = parseInt(views) + 1;
-            localStorage.setItem('profileViews', views);
-            
-            // Format number (e.g., 1,205)
-            viewCountElement.textContent = views.toLocaleString();
+            // Real API View Counter (counts actual unique page loads globally)
+            fetch('https://api.counterapi.dev/v1/curz-bio/profile/up')
+                .then(res => res.json())
+                .then(data => {
+                    viewCountElement.textContent = data.count.toLocaleString();
+                })
+                .catch(() => {
+                    viewCountElement.textContent = "0";
+                });
+
+            // About Me Toggle
+            const aboutBtn = document.getElementById('about-me-btn');
+            const aboutContent = document.getElementById('about-me-content');
+            aboutBtn.addEventListener('click', () => {
+                if (aboutContent.style.display === 'none' || aboutContent.style.display === '') {
+                    aboutContent.style.display = 'block';
+                    aboutContent.style.animation = 'fadeIn 0.3s ease';
+                } else {
+                    aboutContent.style.display = 'none';
+                }
+            });
 
             // Entrance Click Event
             entranceScreen.addEventListener('click', () => {
-                // Fade out entrance screen
                 entranceScreen.style.opacity = '0';
                 entranceScreen.style.visibility = 'hidden';
 
-                // Start video
+                // Unmute and play background video to hear the edit song!
+                bgVideo.muted = false;
+                bgVideo.volume = 0.6; // Adjust volume so it's not too loud (60%)
                 bgVideo.play().catch(error => {
                     console.log("Autoplay prevented:", error);
                 });
 
-                // Small timeout to allow video to start smoothly, then fade in main card
                 setTimeout(() => {
                     mainContent.classList.add('visible');
                 }, 400);
